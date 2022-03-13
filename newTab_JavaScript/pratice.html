@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid #808080
+        }
+    </style>
+</head>
+
+<body>
+    <input type="hidden" id="id" value="0"><br>
+    date: <input type="date" id="date"> <br><br>
+    Time: <input type="time" id="time"> <br><br>
+    task : <input type="text" id="task"> <br><br>
+
+    <button onclick="save()">save</button>
+
+     
+
+        <table id="table" style="width: 100%;margin-top: 30px;">
+            <tr>
+                <th>sr.no</th>
+                <th>date</th>
+                <th>time</th>
+                <th>task</th>
+                <th>status</th>
+                <th>Action</th>
+            </tr>
+
+        </table>
+
+    
+    
+    
+    <script>
+
+        let save = () => {
+
+            let id = Number(document.getElementById("id").value);
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let task = document.getElementById("task").value.trim();
+
+            if (date == "") {
+                document.getElementById("date").focus();
+                return;
+            }
+
+            if (time == "") {
+                document.getElementById("time").focus();
+                return;
+            }
+
+            if (task == "") {
+                document.getElementById("task").focus();
+                return;
+            }
+
+
+
+            let tasks = new Array();
+
+            if (localStorage.getItem("tasks") != null) {
+                tasks = JSON.parse(localStorage.getItem("tasks"));
+            }
+
+            if (id == 0) {
+                let newid = 1;
+                let lastid = 0;
+
+                tasks.forEach(task => {
+
+                    if (task.id > lastid)
+                        lastid = task.id;
+
+                });
+                newid = lastid + 1;
+                let ttask = { id: newid, date: date, time: time, task: task, status: 'open' }
+                tasks.push(ttask);
+            }
+
+            else {
+                console.log(id);
+                tasks = JSON.parse(localStorage.getItem("tasks"));
+                for (let i = 0; i < tasks.length; i++) {
+                    if (tasks[i].id == id) {
+                        tasks[i].date = date;
+                        tasks[i].time = time;
+                        tasks[i].task = task;
+
+
+                    }
+                }
+
+            }
+
+
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
+            document.getElementById("id").value = "0";
+            document.getElementById("date").value = "";
+            document.getElementById("time").value = "";
+            document.getElementById("task").value = "";
+
+            getvalue()
+
+
+        }
+
+        let getvalue = () => {
+
+            let tasks = localStorage.getItem("tasks");
+
+            if (tasks != null) {
+
+                tasks = JSON.parse(tasks);
+                let table = document.getElementById("table");
+                let rowcount = table.rows.length;
+
+                if (rowcount > 1) {
+                    for (let i = 1; i < rowcount; i++) {
+
+                        table.deleteRow(1);
+                    }
+                }
+
+                let count = 0;
+                tasks.forEach(task => {
+                    count++;
+
+                    let row = table.insertRow(table.rows.length);
+                    let cell0 = row.insertCell(0);
+                    let cell1 = row.insertCell(1);
+                    let cell2 = row.insertCell(2);
+                    let cell3 = row.insertCell(3);
+                    let cell4 = row.insertCell(4);
+                    let cell5 = row.insertCell(5);
+
+                    cell0.innerHTML = count;
+                    cell1.innerHTML = task.date;
+                    cell2.innerHTML = task.time;
+                    cell3.innerHTML = task.task;
+                    cell4.innerHTML = task.status;
+                    cell5.innerHTML = "<button onclick='editvalue(" + task.id + ")'>Edit</button>"
+                    cell5.innerHTML += "<button onclick='deletevalue(" + task.id + ")'>Delete</button>";
+                    cell5.innerHTML += "<button  onclick='closevalue(" + task.id + ")'></button>"
+
+                    if (task.status == "open") {
+                        cell5.innerHTML += "<button onclick='closevalue(" + task.id + ",\"close\")'>close</button>";
+                    }
+                    else {
+                        cell5.innerHTML += "<button onclick='closevalue(" + task.id + ",\"open\")'>open</button>";
+                    }
+
+                });
+
+
+            }
+
+        }
+        let editvalue = (id) => {
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+            tasks.forEach(task => {
+                if (task.id == id) {
+                    document.getElementById("id").value = id;
+                    document.getElementById("date").value = task.date;
+                    document.getElementById("time").value = task.time;
+                    document.getElementById("task").value = task.task;
+
+                }
+            })
+        }
+
+
+        let deletevalue = (id) => {
+            alert(id)
+
+            if (confirm("sure to delete")) {
+                let tasks = JSON.parse(localStorage.getItem("tasks"));
+                let newtasks = new Array;
+
+                tasks.forEach(task => {
+                    if (task.id != id) {
+                        newtasks.push(task);
+
+                    }
+
+                });
+
+                localStorage.setItem("tasks", JSON.stringify(newtasks));
+
+                getvalue();
+
+            }
+        }
+        let closevalue = (id, status) => {
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+            for (let i = 0; i < tasks.length; i++) {
+                if (tasks[i].id == id) {
+                    tasks[i].status = status;
+                }
+            }
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            getvalue();
+
+        }
+
+        getvalue();
+    </script>
+    </script>
+</body>
+
+<!-- 
+<script>
+    let save = () => {
+
+        let id = Number(document.getElementById("id").value);
+        let date = document.getElementById("date").value;
+        let time = document.getElementById("time").value;
+        let task = document.getElementById("task").value;
+
+        if (date == "") {
+            document.getElementById("date").focus();
+            return;
+        }
+
+        if (time == "") {
+            document.getElementById("time").focus();
+            return;
+        }
+
+
+        if (task == "") {
+            document.getElementById("task").focus();
+            return;
+        }
+
+
+
+        let tasks = new Array();
+
+        if (localStorage.getItem("tasks") != null) {
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+        }
+
+     console.log(tasks)
+
+        if(id == 0) {
+           let newid = 1;
+            let lastid = 0;
+
+            tasks.forEach(task => {
+
+                if (task.id > lastid)
+                    lastid = task.id;
+
+            }); 
+
+            newid = lastid + 1;
+                                                                                                                                                        
+            let ttask = { id: newid, date: date, time: time, task: task, status: 'open' }
+            tasks.push(ttask);
+        }
+
+        else{
+            tasks = JSON.parse(localStorage.getItem("tasks"))
+            for(i=0;i<tasks.length;i++){
+                if(tasks[i].id == id){
+                    tasks[i].date = date;
+                    tasks[i].time = time;
+                    tasks[i].task = task;
+
+                }
+            }
+        }
+    
+
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
+
+
+        document.getElementById("id").value = "0";
+        document.getElementById("date").value = "";
+        document.getElementById("time").value = "";
+        document.getElementById("task").value = "";
+
+
+        getvalue();
+
+    }
+
+    let getvalue = () => {
+        let tasks = localStorage.getItem("tasks");
+
+        if(tasks != null){
+        tasks = JSON.parse(tasks)
+        let table = document.getElementById("table");
+
+        let rowcount = table.rows.length;
+        // alert(rowcount)
+        if (rowcount > 1) {
+
+            for (i = 1; i < rowcount; i++) {
+
+                table.deleteRow(1);
+            }
+        }
+
+        count = 0;
+        tasks.forEach(task => {
+            count = count + 1;
+            console.log(count);
+
+            let row = table.insertRow(table.rows.length);;
+            let cell0 = row.insertCell(0);
+            let cell1 = row.insertCell(1);
+            let cell2 = row.insertCell(2);
+            let cell3 = row.insertCell(3);
+            let cell4 = row.insertCell(4);
+            let cell5 = row.insertCell(5);
+
+            console.log(task)
+            cell0.innerHTML = count;
+            cell1.innerHTML = task.date;
+            cell2.innerHTML = task.time;
+            cell3.innerHTML = task.task;
+            cell4.innerHTML = task.status;
+            cell5.innerHTML = "<button onclick='editvalue(" + task.id + ")'>Edit</button>";
+            cell5.innerHTML += "<button onclick='deletevalue(" + task.id + ")'>Delete</button>";
+            cell5.innerHTML += "<button onclick='closevalue(" + task.id + ")'></button>";
+
+            if (task.status == "open") {
+                cell5.innerHTML += "<button onclick='closevalue(" + task.id + ",\"close\")'>close</button>";
+
+            }
+            else {
+                cell5.innerHTML += "<button onclick='closevalue(" + task.id + ",\"open\")'>open<button>";
+            }
+
+
+        });
+
+    }
+
+    }
+    let deletevalue = (id) => {
+        if (confirm("Sure to dalete..!")) {
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+
+            let newarray = new Array();
+            tasks.forEach(task => {
+                if (task.id != id) {
+                    newarray.push(task)
+                }
+            })
+
+            localStorage.setItem("tasks", JSON.stringify(newarray));
+
+            getvalue();
+
+
+
+        }
+    }
+    let editvalue = (id) => {
+        alert(id)
+        tasks = JSON.parse(localStorage.getItem("tasks"));
+        tasks.forEach(task => {
+            if (task.id == id) {
+                document.getElementById("date").value = task.date;
+                document.getElementById("time").value = task.time;
+                document.getElementById("task").value = task.task;
+
+            }
+        })
+
+
+    }
+
+    let closevalue = (id, status) => {
+        tasks = JSON.parse(localStorage.getItem("tasks"));
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id == id) {
+                tasks[i].status = status;
+            }
+        }
+
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        getvalue();
+    }
+
+    getvalue();
+
+</script> -->
+</html>

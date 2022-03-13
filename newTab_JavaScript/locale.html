@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid #808080
+        }
+    </style>
+</head>
+
+<body>
+    <input type="hidden" id="id" value="0"><br>
+    date: <input type="date" id="date"> <br><br>
+    Time: <input type="time" id="time"> <br><br>
+    task : <input type="text" id="task"> <br><br>
+
+    <button onclick="save()">save</button>
+
+
+
+    <table id="table" style="width: 100%;margin-top: 30px;">
+        <tr>
+            <th>sr.no</th>
+            <th>date</th>
+            <th>time</th>
+            <th>task</th>
+            <th>status</th>
+            <th>Action</th>
+        </tr>
+
+    </table>
+
+
+    <script>
+
+        let save = () => {
+
+            let id = Number(document.getElementById("id").value);
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let task = document.getElementById("task").value.trim();
+
+            if (date == "") {
+                document.getElementById("date").focus();
+                return;
+            }
+
+            if (time == "") {
+                document.getElementById("time").focus();
+                return;
+            }
+
+            if (task == "") {
+                document.getElementById("task").focus();
+                return;
+            }
+
+            let ttask = { id: 0, date: date, time: time, task: task, stetus: 'open' }
+            let tasks = new Array()
+            tasks.push(ttask);
+            console.log(tasks);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
+
+            getvalue();
+        }
+        let getvalue = () => {
+            tasks = localStorage.getItem("tasks");
+            console.log(tasks);
+            tasks = JSON.parse(localStorage.getItem("tasks"));
+            console.log(tasks);
+
+            let table = document.getElementById("table");
+            let rowcount = table.rows.length;
+            alert(rowcount);
+
+            for(i=1;i<rowcount;i++){
+                table.delelete
+            }
+
+
+
+        }
+
+    </script>
+</body>
+
+</html>

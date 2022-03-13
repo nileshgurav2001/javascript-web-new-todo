@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my cookies</title>
+</head>
+
+<body>
+    <script>
+
+
+        function setcookies(name, value) {
+            let today = new Date;
+            today.setDate(today.getDate() + 30);
+            console.log(today)
+            document.cookie = name + "=" + value + ";expires=" + today.toString();
+
+        }
+
+        
+        function getcookies(name) {
+            let value = "";
+            let cookie = document.cookie;
+            let cookies = cookie.split(";");
+            for (i = 0; i < cookies.length; i++) {
+                let data =cookies[i].split('=');
+                if(data[0].trim()==name){
+                    let value = data[1];
+                }
+                
+            }
+            return value;
+            
+        }
+        
+        
+        function daletecookies(name){
+            let today = new Date;
+            today.setDate(today.getDate() - 30);
+            document.cookie = name + "=" + value + ";expires=" + today.toString();
+        }
+        
+        
+        
+        setcookies('name', 'Nilesh');
+        setcookies('usernameID', '1');
+        setcookies('stetus', 'student');
+
+    //    let value = getcookies('usernameID');
+    //     console.log(value);
+    </script>
+</body>
+
+</html>

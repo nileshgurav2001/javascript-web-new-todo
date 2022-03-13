@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+       
+       function setcookies(name,value){
+           let today = new Date;
+           console.log(today);
+           today.setDate(today.getDate() + 30);
+           console.log(today);
+           document.cookie = name + "=" + value + ";expires=" + today.toString();
+        
+
+       }
+        
+        function getcookies(name) {
+            let value = "";
+            let bsk = document.cookie;
+            console.log(bsk);
+            let cookies = bsk.split(";");
+            console.log(cookies);
+            for (i = 0; i < cookies.length; i++) {
+                let data =cookies[i].split('=');
+                console.log(data);
+                if(data[0].trim()==name){
+                    let value = data[1];
+                }
+                
+            }
+            return value;
+           
+        }
+    
+        setcookies('user', 'Nilesh');
+        setcookies('email', 'nilesh753737@gmail.com');
+        setcookies('roll', '56');
+
+        getcookies("email");
+      
+
+    </script> 
+</body>
+</html>
